@@ -33,16 +33,21 @@ Full documentation on Slurm on ARCHER2 can be found in the [Running Jobs on ARCH
 The `sinfo` command shows the current state of the compute nodes known to the scheduler:
 
 ```
-auser@uan01:~> sinfo
+auser@ln01:~> sinfo
 ```
 {: .language-bash}
 ```
-PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST 
-standard     up 1-00:00:00     17 drain* nid[001301,001363,001388,001552,001561-001562,001568,001622,001690,001746,001825,001834,001841,001848,001884,001894-001895] 
-standard     up 1-00:00:00      7  drain nid[001391,001840,001842-001843,001892-001893,001955] 
-standard     up 1-00:00:00    926  alloc nid[001000-001110,001112-001238,001241-001300,001302-001361,001364-001387,001389-001390,001392-001395,001397-001408,001411-001471,001476-001520,001525-001551,001563-001567,001569-001570,001575,001580-001604,001608-001621,001623-001656,001661-001664,001676-001679,001681-001689,001691-001745,001747-001762,001764-001805,001816-001824,001826-001831,001836-001839,001844,001846-001847,001849-001883,001885-001886,001888-001891,001896-001903,001908-001954,001956-001977,001979-001996,001999-002022] 
-standard     up 1-00:00:00     11   resv nid[001111,001396,001409,001672-001675,001832-001833,001835,002023] 
-standard     up 1-00:00:00     63   idle nid[001239-001240,001362,001410,001472-001475,001521-001524,001553-001560,001571-001574,001576-001579,001605-001607,001657-001660,001665-001671,001680,001763,001806-001815,001845,001887,001904-001907,001978,001997-001998] 
+PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
+standard     up 1-00:00:00      6 drain$ nid[001693,002059,002546,003583,005123,005343]
+standard     up 1-00:00:00     18 drain* nid[001395,001442,002195,002447,003082,003257,003395,003598,004148,004213,004231,004336-004337,004999,005481,005731,005799,006210]
+standard     up 1-00:00:00      8  drain nid[001638,002315,002689,005507,005930,006127,006190,006759]
+standard     up 1-00:00:00     95   resv nid[001256-001257,001259-001262,001296-001383,002760]
+standard     up 1-00:00:00   5067  alloc nid[001000-001255,001258,001263-001295,001384-001394,001396-001416,001419-001441,001443-001574,001579-001582,001593-001637,001639-001692,001694-001799,001812,001817-002051,002053-002058,002060-002121,002123,002126-002194,002196-002200,002202-002229,002234-002239,002251-002256,002259-002279,002300-002303,002311,002334,002355,002368-002369,002391-002400,002408-002409,002412,002414-002415,002418-002421,002423-002429,002431,002433-002434,002437-002446,002448-002502,002507-002514,002525-002534,002536-002545,002547-002688,002690-002759,002761-002950,002952-002958,002982,002991-002995,003002-003003,003015-003036,003038,003041-003042,003048-003081,003083-003256,003258-003362,003364-003369,003371-003394,003396-003431,003461-003463,003465-003467,003478-003500,003521-003525,003527-003532,003539,003542,003544-003552,003555-003582,003584-003597,003599-003943,003953,003956,003959,003965-003971,003977-003978,003980,003984,004002-004003,004005,004010,004012-004013,004015-004017,004021,004025-004026,004028,004038-004057,004060,004063-004068,004072-004147,004149-004212,004214-004230,004232-004335,004338-004583,004620-004623,004628-004629,004632-004633,004636-004638,004647,004653,004672,004679-004680,004695,004701-004702,004705-004715,004718-004744,004747-004748,004758-004761,004763,004765-004807,004811-004818,004821-004835,004837-004974,004983-004998,005000-005122,005124-005342,005344-005348,005351-005398,005404,005408-005480,005482-005506,005508-005526,005528-005558,005560,005565,005569-005576,005578-005587,005589-005591,005593-005595,005598,005604-005606,005608-005635,005638-005659,005661-005689,005691-005695,005697-005705,005707-005711,005717-005729,005735-005747,005749-005758,005784,005807-005808,005810-005814,005824,005828,005845-005848,005850-005861,005864-005929,005931-006037,006054-006126,006128-006189,006191-006209,006211-006387,006389-006390,006392-006756,006758,006760-006859]
+standard     up 1-00:00:00    666   idle nid[001417-001418,001575-001578,001583-001592,001800-001811,001813-001816,002052,002122,002124-002125,002201,002230-002233,002240-002250,002257-002258,002280-002299,002304-002310,002312-002314,002316-002333,002335-002354,002356-002367,002370-002390,002401-002407,002410-002411,002413,002416-002417,002422,002430,002432,002435-002436,002503-002506,002515-002524,002535,002951,002959-002981,002983-002990,002996-003001,003004-003014,003037,003039-003040,003043-003047,003363,003370,003432-003460,003464,003468-003477,003501-003520,003526,003533-003538,003540-003541,003543,003553-003554,003944-003952,003954-003955,003957-003958,003960-003964,003972-003976,003979,003981-003983,003985-004001,004004,004006-004009,004011,004014,004018-004020,004022-004024,004027,004029-004037,004058-004059,004061-004062,004069-004071,004584-004619,004624-004627,004630-004631,004634-004635,004639-004646,004648-004652,004654-004671,004673-004678,004681-004694,004696-004700,004703-004704,004716-004717,004745-004746,004749-004757,004762,004764,004808-004810,004819-004820,004836,004975-004982,005349-005350,005399-005403,005405-005407,005527,005559,005561-005564,005566-005568,005577,005588,005592,005596-005597,005599-005603,005607,005636-005637,005660,005690,005696,005706,005712-005716,005730,005732-005734,005748,005759-005783,005785-005798,005800-005806,005809,005815-005823,005825-005827,005829-005844,005849,005862-005863,006038-006053,006388,006391,006757]
+highmem      up 1-00:00:00      1   resv nid002760
+highmem      up 1-00:00:00    516  alloc nid[002756-002759,002761-002911,002916-002950,002952-002958,002982,002991-002995,003002-003003,003015-003036,003038,003041-003042,006376-006387,006389-006390,006392-006411,006416-006667]
+highmem      up 1-00:00:00     59   idle nid[002951,002959-002981,002983-002990,002996-003001,003004-003014,003037,003039-003040,003043-003047,006388,006391]
+serial       up 1-00:00:00      2   idle dvn[01-02]
 ```
 {: .output}
 
@@ -69,39 +74,36 @@ The nodes can be in many different states, the most common you will see are:
 If you prefer to see the state of individual nodes, you can use the `sinfo -N -l` command.
 
 > ## Lots to look at!
-> Warning! The `sinfo -N -l` command will produce a lot of output as there are 1024 individual 
+> Warning! The `sinfo -N -l` command will produce a lot of output as there are 5860 individual 
 > nodes on the current ARCHER2 system! (It will be even worse on the full system when there will be
-> over 5,500 nodes.) 
+> over 5,860 nodes.) 
 {: .callout}
 
 ```
-auser@uan01:~> sinfo -N -l
+auser@ln01:~> sinfo -N -l
 ```
 {: .language-bash}
 ```
-Fri Aug 27 12:08:55 2021
-NODELIST   NODES PARTITION       STATE CPUS    S:C:T MEMORY TMP_DISK WEIGHT AVAIL_FE REASON               
-nid001000      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001001      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001002      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001003      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001004      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001005      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001006      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001007      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001008      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001009      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001010      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001011      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001012      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001013      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001014      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001015      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001016      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001017      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001018      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001019      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                 
-nid001020      1  standard   allocated 256    2:64:2 256000        0      1   (null) none                           
+Mon Nov 29 19:02:37 2021
+NODELIST   NODES PARTITION       STATE CPUS    S:C:T MEMORY TMP_DISK WEIGHT AVAIL_FE REASON              
+dvn01          1    serial        idle 256    2:64:2 515450        0      1 DVN,AMD_ none                
+dvn02          1    serial        idle 256    2:64:2 515450        0      1 DVN,AMD_ none                
+nid001000      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001001      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001002      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001003      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001004      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001005      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001006      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001007      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001008      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001009      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001010      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001011      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001012      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001013      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001014      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
+nid001015      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                                   
 ...lots of output trimmed...
 
 ```
@@ -112,7 +114,7 @@ nid001020      1  standard   allocated 256    2:64:2 256000        0      1   (n
 > command to see the name, CPUs and memory available on the worker nodes (the instructors will give you the ID of
 > the compute node to use):
 > ```
-> [auser@uan01:~> sinfo -n nid001000 -o "%n %c %m"
+> [auser@ln01:~> sinfo -n nid001000 -o "%n %c %m"
 > ```
 > {: .language-bash}
 > This should display the resources available for a standard node. Are they what you expect given what we learnt
@@ -121,7 +123,7 @@ nid001020      1  standard   allocated 256    2:64:2 256000        0      1   (n
 > > The output should show:
 > > ```
 > > HOSTNAMES CPUS MEMORY
-> > nid001000 256 256000
+> > nid001000 256 227328
 > > ```
 > > You may be surprised that the output shows 256 CPUS per compute node when the earlier description stated
 > > that there were 128 cores per node. This is because each physical core can support two hardware threads
@@ -153,9 +155,6 @@ two nodes.
 #SBATCH --partition=standard
 #SBATCH --qos=standard
 
-# This module needs to be loaded in ALL scripts
-module load epcc-job-env
-
 # Now load the "xthi" package
 module load xthi
 
@@ -184,7 +183,7 @@ You use the `sbatch` command to submit job submission scripts to the scheduler. 
 above script was saved in a file called `test_job.slurm`, you would submit it with:
 
 ```
-auser@uan01:~> sbatch test_job.slurm
+auser@ln01:~> sbatch test_job.slurm
 ```
 {: .language-bash}
 ```
@@ -194,67 +193,13 @@ Submitted batch job 23996
 
 Slurm reports back with the job ID for the job you have submitted
 
-<!-- This exercise is not ideal - it would be good to replace with something more useful -->
-
-> ## What are the default for `sbatch` options?
-> If you do not specify job options, what are the defaults for Slurm on ARCHER2? Submit jobs to find out
-> what the defaults are for:
-> 
-> 1. Budget (or Account) the job is charged to?
-> 2. Tasks per node?
-> 3. Number of nodes?
-> 4. Walltime? (This one is hard!)
-> 
-> > ## Solution
-> > 
-> > (1) Budget: defaults to your primary group (for accounts in this course, this will be `ta035`)
-> >
-> > You can get the answers to 2. and 3. this with the following script):
-> > 
-> > ```
-> > #!/bin/bash
-> > #SBATCH --job-name=my_mpi_job
-> > module load epcc-job-env
-> > ...
-> > echo "Nodes: $SLURM_JOB_NUM_NODES"
-> > echo "Tasks per node: $SLURM_NTASKS_PER_NODE"
-> > module load xthi
-> > 
-> > export OMP_NUM_THREADS=1
-> > 
-> > srun --cpu-bind=cores xthi
-> > ```
-> > {: .language-bash}
-> > 
-> > (2) Tasks per node: 256
-> >
-> > (3) Number of nodes: 1
-> >
-> > Getting the default time limit is more difficult - we need to use `sacct` to query the time limit set for
-> > the job. For example, if the job ID was "12345", then we could query the time limit with:
-> > 
-> > ```
-> > auser@uan01:~> sacct -o "TimeLimit" -j 12345
-> > ```
-> > {: .language-bash}
-> > ```
-> >  Timelimit 
-> > ---------- 
-> >  01:00:00 
-> > ```
-> > {: .output}
-> >
-> > (4) Walltime: 1 hour
-> {: .solution}
-{: .challenge}
-
 ### Checking progress of your job with `squeue`
 
 You use the `squeue` command to show the current state of the queues on ARCHER2. Without any options, it
 will show all jobs in the queue:
 
 ```
-auser@uan01:~> squeue
+auser@ln01:~> squeue
 ```
 {: .language-bash}
 ```
@@ -286,6 +231,8 @@ JOBID  PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
 ```
 {: .output}
 
+You can show just your jobs with `squeue -u $USER`.
+
 ### Cancelling jobs with `scancel`
 
 You can use the `scancel` command to cancel jobs that are queued or running. When used on running jobs
@@ -311,6 +258,22 @@ srun --hint=nomultithread --distribution=block:block xthi
 ```
 {: .language-bash}
 
+## STDOUT/STDERR from jobs
+
+STDOUT and STDERR from jobs are, by default, written to a file called `slurm-<jobid>.out` in the
+working directory for the job (unless the job script changes this, this will be the directory
+where you submitted the job). So for a job with ID `12345` STDOUT and STDERR would be in
+`slurm-12345.out`.
+
+If you run into issues with your jobs, the Service Desk will often ask you to send your job
+submission script and the contents of this file to help debug the issue.
+
+If you need to change the location of STDOUT and STDERR you can use the `--output=<filename>`
+and the `--error=<filename>` options to `sbatch` to split the streams and output to the named
+locations.
+
+<!-- Exercise to check output of test job -->
+
 > ## Underpopulation of nodes
 > You may often want to *underpopulate* nodes on ARCHER2 to access more memory or more memory 
 > bandwidth per task. Can you state the `sbatch` options you would use to run `xthi`:
@@ -329,6 +292,8 @@ srun --hint=nomultithread --distribution=block:block xthi
 > > 3. `--nodes=4 --ntasks-per-node=32 --ntasks-per-socket=16 --cpus-per-task=4`
 > {: .solution}
 {: .challenge}
+
+
 
 ### Hybrid MPI and OpenMP jobs
 
@@ -361,9 +326,6 @@ per node and 16 OpenMP threads per MPI task (so all 256 cores across both nodes 
 #SBATCH --partition=standard
 #SBATCH --qos=standard
 
-# This module needs to be loaded in ALL scripts
-module load epcc-job-env
-
 # Now load the "xthi" package
 module load xthi
 
@@ -387,19 +349,7 @@ on nodes where all cores are used:
 * 32 MPI tasks per node and 4 OpenMP threads per task: equivalent to 4 MPI tasks per NUMA region
 * 64 MPI tasks per node and 2 OpenMP threads per task: equivalent to 8 MPI tasks per NUMA region 
 
-## STDOUT/STDERR from jobs
 
-STDOUT and STDERR from jobs are, by default, written to a file called `slurm-<jobid>.out` in the
-working directory for the job (unless the job script changes this, this will be the directory
-where you submitted the job). So for a job with ID `12345` STDOUT and STDERR would be in
-`slurm-12345.out`.
-
-If you run into issues with your jobs, the Service Desk will often ask you to send your job
-submission script and the contents of this file to help debug the issue.
-
-If you need to change the location of STDOUT and STDERR you can use the `--output=<filename>`
-and the `--error=<filename>` options to `sbatch` to split the streams and output to the named
-locations.
 
 ## Other useful information
 
@@ -418,7 +368,7 @@ For example, to execute `xthi` across all cores on two nodes (1 MPI task per cor
 OpenMP threading) within an interactive job you would issue the following commands:
 
 ```
-auser@uan01:~> srun --partition=standard --qos=standard --nodes=2 --ntasks-per-node=128 --cpus-per-task=1 --time=0:10:0 --account=ta001 xthi
+auser@ln01:~> srun --partition=standard --qos=standard --nodes=2 --ntasks-per-node=128 --cpus-per-task=1 --time=0:10:0 --account=ta001 xthi
 ```
 {: .language-bash}
 ```
