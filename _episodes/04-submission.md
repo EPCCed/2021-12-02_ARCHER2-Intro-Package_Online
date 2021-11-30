@@ -127,8 +127,9 @@ nid001015      1  standard   allocated 256    2:64:2 227328        0      1 COMP
 > > ```
 > > You may be surprised that the output shows 256 CPUS per compute node when the earlier description stated
 > > that there were 128 cores per node. This is because each physical core can support two hardware threads
-> > (often referred to as hyperthreads). Most jobs will only make use of one of these threads as using the
-> > other thread can reduce performance.
+> > (often referred to as symmetric multithreading, SMT). Most jobs will only make use of one of these
+> > threads as using the other thread can reduce performance. This manifests itself as 256 *logical* cores
+> > per node (with two logical cores per physical core).
 > {: .solution}
 {: .challenge}
 
@@ -153,7 +154,7 @@ two nodes.
 #SBATCH --time=0:10:0
 #SBATCH --account=ta001
 #SBATCH --partition=standard
-#SBATCH --qos=standard
+#SBATCH --qos=short
 
 # Now load the "xthi" package
 module load xthi
@@ -174,6 +175,16 @@ The options shown here are:
 * `--cpus-per-task=1` - Number of cores to allocate per parallel process 
 * `--time=0:10:0` - Set 10 minutes maximum walltime for this job
 * `--account=ta001` - Charge the job to the `t01` budget
+* `--partition=standard` - Use nodes from the standard partition on ARCHER2 (the standard partition
+  includes all compute nodes).
+* `--qos=short` - Use the `short` Quality of Service (QoS). Different QoS define different limits
+  for jobs. The short QoS allows small short jobs only but guarantees that they run quickly/straight away.
+
+> ## Partitions and QoS
+> There are a small number of different partitions on ARCHER2 (covering different node types) and
+> a wider variety of QoS (covering different use cases). You can find a list of the available 
+> partitions and QoS in the [ARCHER2 User and Best Practice Guide](https://docs.archer2.ac.uk/user-guide/scheduler/#resource-limits).
+{: .callout}
 
 We will discuss the `srun` command further below.
 
@@ -236,7 +247,20 @@ You can show just your jobs with `squeue -u $USER`.
 ### Cancelling jobs with `scancel`
 
 You can use the `scancel` command to cancel jobs that are queued or running. When used on running jobs
-it stops them immediately.
+it stops them immediately. You need to supply options to `scancel` to specify which jobs to kill.
+To kill a particular job you supply the job ID, e.g. to kill the job with ID `12345`:
+
+```
+scancel 12345
+```
+{: .language-bash}
+
+To kill all your queued jobs (but not running ones):
+
+```
+scancel --user=$USER --state=PENDING
+```
+{: .language-bash}
 
 ### Running parallel applications using `srun`
 
@@ -276,24 +300,16 @@ locations.
 
 > ## Underpopulation of nodes
 > You may often want to *underpopulate* nodes on ARCHER2 to access more memory or more memory 
-> bandwidth per task. Can you state the `sbatch` options you would use to run `xthi`:
+> bandwidth per task. Can you state the `sbatch` options you would use to run `xthi` on 4 
+> nodes with 64 tasks per node?
 > 
-> 1. On 4 nodes with 64 tasks per node?
-> 2. On 8 nodes with 2 tasks per node, 1 task per socket?
-> 3. On 4 nodes with 32 tasks per node, ensuring an even distribution across the 8 NUMA regions
-> on the node?
-> 
-> Once you have your answers run them in job scripts and check that the binding of tasks to 
+> Once you have your answer run them in job script and check that the binding of tasks to 
 > nodes and cores output by `xthi` is what you expect.
 > 
 > > ## Solution
-> > 1. `--nodes=4 --ntasks-per-node=64`
-> > 2. `--nodes=8 --ntasks-per-node=2 --ntasks-per-socket=1`
-> > 3. `--nodes=4 --ntasks-per-node=32 --ntasks-per-socket=16 --cpus-per-task=4`
+> > The options you need are: `--nodes=4 --ntasks-per-node=64`.
 > {: .solution}
 {: .challenge}
-
-
 
 ### Hybrid MPI and OpenMP jobs
 
@@ -302,7 +318,7 @@ When running hybrid MPI (with the individual tasks also known as ranks or proces
 using `srun` for the multiple OpenMP threads that will be associated with each MPI task.
 
 As we saw above, you can use the options to `sbatch` to control how many parallel tasks are
-placed on each compute node and can use the `--cpus-per-task` option to set the stride 
+placed on each compute node. You use the `--cpus-per-task` option to set the stride 
 between parallel tasks to the right value to accommodate the OpenMP threads - the value
 for `--cpus-per-task` should usually be the same as that for `OMP_NUM_THREADS`. To ensure
 you get the correct thread pinning, you also need to specify an additional OpenMP environment
@@ -324,7 +340,7 @@ per node and 16 OpenMP threads per MPI task (so all 256 cores across both nodes 
 #SBATCH --time=0:10:0
 #SBATCH --account=t01
 #SBATCH --partition=standard
-#SBATCH --qos=standard
+#SBATCH --qos=short
 
 # Now load the "xthi" package
 module load xthi
@@ -349,8 +365,6 @@ on nodes where all cores are used:
 * 32 MPI tasks per node and 4 OpenMP threads per task: equivalent to 4 MPI tasks per NUMA region
 * 64 MPI tasks per node and 2 OpenMP threads per task: equivalent to 8 MPI tasks per NUMA region 
 
-
-
 ## Other useful information
 
 In this section we briefly introduce other scheduler topics that may be useful to users. We
@@ -368,7 +382,8 @@ For example, to execute `xthi` across all cores on two nodes (1 MPI task per cor
 OpenMP threading) within an interactive job you would issue the following commands:
 
 ```
-auser@ln01:~> srun --partition=standard --qos=standard --nodes=2 --ntasks-per-node=128 --cpus-per-task=1 --time=0:10:0 --account=ta001 xthi
+auser@ln01:~> module load xthi
+auser@ln01:~> srun --partition=standard --qos=short --nodes=2 --ntasks-per-node=128 --cpus-per-task=1 --time=0:10:0 --account=ta001 xthi
 ```
 {: .language-bash}
 ```
