@@ -85,7 +85,7 @@ auser@ln01:~> sinfo -N -l
 {: .language-bash}
 ```
 Mon Nov 29 19:02:37 2021
-NODELIST   NODES PARTITION       STATE CPUS    S:C:T MEMORY TMP_DISK WEIGHT AVAIL_FE REASON              
+> > NodeLIST   NODES PARTITION       STATE CPUS    S:C:T MEMORY TMP_DISK WEIGHT AVAIL_FE REASON              
 dvn01          1    serial        idle 256    2:64:2 515450        0      1 DVN,AMD_ none                
 dvn02          1    serial        idle 256    2:64:2 515450        0      1 DVN,AMD_ none                
 nid001000      1  standard   allocated 256    2:64:2 227328        0      1 COMPUTE, none                
@@ -282,7 +282,7 @@ srun --hint=nomultithread --distribution=block:block xthi
 ```
 {: .language-bash}
 
-## STDOUT/STDERR from jobs
+### STDOUT/STDERR from jobs
 
 STDOUT and STDERR from jobs are, by default, written to a file called `slurm-<jobid>.out` in the
 working directory for the job (unless the job script changes this, this will be the directory
@@ -296,30 +296,464 @@ If you need to change the location of STDOUT and STDERR you can use the `--outpu
 and the `--error=<filename>` options to `sbatch` to split the streams and output to the named
 locations.
 
-<!-- Exercise to check output of test job -->
+> ## Is the output what you expect?
+>
+> Locate and examine the STDOUT from the job you ran above. Does it indicate that each 
+> MPI process is bound to a different physical core as expected?
+>
+> > ## Solution
+> > The output should look something like the below showing that each of the 256 MPI processes
+> > is bound to a separate physical core.
+> >
+> > ```
+> > Node summary for    2 nodes:
+> > Node    0, hostname nid001342, mpi 128, omp   1, executable xthi
+> > Node    1, hostname nid001343, mpi 128, omp   1, executable xthi
+> > MPI summary: 256 ranks 
+> > Node    0, rank    0, thread   0, (affinity =    0) 
+> > Node    0, rank    1, thread   0, (affinity =    1) 
+> > Node    0, rank    2, thread   0, (affinity =    2) 
+> > Node    0, rank    3, thread   0, (affinity =    3) 
+> > Node    0, rank    4, thread   0, (affinity =    4) 
+> > Node    0, rank    5, thread   0, (affinity =    5) 
+> > Node    0, rank    6, thread   0, (affinity =    6) 
+> > Node    0, rank    7, thread   0, (affinity =    7) 
+> > Node    0, rank    8, thread   0, (affinity =    8) 
+> > Node    0, rank    9, thread   0, (affinity =    9) 
+> > Node    0, rank   10, thread   0, (affinity =   10) 
+> > Node    0, rank   11, thread   0, (affinity =   11) 
+> > Node    0, rank   12, thread   0, (affinity =   12) 
+> > Node    0, rank   13, thread   0, (affinity =   13) 
+> > Node    0, rank   14, thread   0, (affinity =   14) 
+> > Node    0, rank   15, thread   0, (affinity =   15) 
+> > Node    0, rank   16, thread   0, (affinity =   16) 
+> > Node    0, rank   17, thread   0, (affinity =   17) 
+> > Node    0, rank   18, thread   0, (affinity =   18) 
+> > Node    0, rank   19, thread   0, (affinity =   19) 
+> > Node    0, rank   20, thread   0, (affinity =   20) 
+> > Node    0, rank   21, thread   0, (affinity =   21) 
+> > Node    0, rank   22, thread   0, (affinity =   22) 
+> > Node    0, rank   23, thread   0, (affinity =   23) 
+> > Node    0, rank   24, thread   0, (affinity =   24) 
+> > Node    0, rank   25, thread   0, (affinity =   25) 
+> > Node    0, rank   26, thread   0, (affinity =   26) 
+> > Node    0, rank   27, thread   0, (affinity =   27) 
+> > Node    0, rank   28, thread   0, (affinity =   28) 
+> > Node    0, rank   29, thread   0, (affinity =   29) 
+> > Node    0, rank   30, thread   0, (affinity =   30) 
+> > Node    0, rank   31, thread   0, (affinity =   31) 
+> > Node    0, rank   32, thread   0, (affinity =   32) 
+> > Node    0, rank   33, thread   0, (affinity =   33) 
+> > Node    0, rank   34, thread   0, (affinity =   34) 
+> > Node    0, rank   35, thread   0, (affinity =   35) 
+> > Node    0, rank   36, thread   0, (affinity =   36) 
+> > Node    0, rank   37, thread   0, (affinity =   37) 
+> > Node    0, rank   38, thread   0, (affinity =   38) 
+> > Node    0, rank   39, thread   0, (affinity =   39) 
+> > Node    0, rank   40, thread   0, (affinity =   40) 
+> > Node    0, rank   41, thread   0, (affinity =   41) 
+> > Node    0, rank   42, thread   0, (affinity =   42) 
+> > Node    0, rank   43, thread   0, (affinity =   43) 
+> > Node    0, rank   44, thread   0, (affinity =   44) 
+> > Node    0, rank   45, thread   0, (affinity =   45) 
+> > Node    0, rank   46, thread   0, (affinity =   46) 
+> > Node    0, rank   47, thread   0, (affinity =   47) 
+> > Node    0, rank   48, thread   0, (affinity =   48) 
+> > Node    0, rank   49, thread   0, (affinity =   49) 
+> > Node    0, rank   50, thread   0, (affinity =   50) 
+> > Node    0, rank   51, thread   0, (affinity =   51) 
+> > Node    0, rank   52, thread   0, (affinity =   52) 
+> > Node    0, rank   53, thread   0, (affinity =   53) 
+> > Node    0, rank   54, thread   0, (affinity =   54) 
+> > Node    0, rank   55, thread   0, (affinity =   55) 
+> > Node    0, rank   56, thread   0, (affinity =   56) 
+> > Node    0, rank   57, thread   0, (affinity =   57) 
+> > Node    0, rank   58, thread   0, (affinity =   58) 
+> > Node    0, rank   59, thread   0, (affinity =   59) 
+> > Node    0, rank   60, thread   0, (affinity =   60) 
+> > Node    0, rank   61, thread   0, (affinity =   61) 
+> > Node    0, rank   62, thread   0, (affinity =   62) 
+> > Node    0, rank   63, thread   0, (affinity =   63) 
+> > Node    0, rank   64, thread   0, (affinity =   64) 
+> > Node    0, rank   65, thread   0, (affinity =   65) 
+> > Node    0, rank   66, thread   0, (affinity =   66) 
+> > Node    0, rank   67, thread   0, (affinity =   67) 
+> > Node    0, rank   68, thread   0, (affinity =   68) 
+> > Node    0, rank   69, thread   0, (affinity =   69) 
+> > Node    0, rank   70, thread   0, (affinity =   70) 
+> > Node    0, rank   71, thread   0, (affinity =   71) 
+> > Node    0, rank   72, thread   0, (affinity =   72) 
+> > Node    0, rank   73, thread   0, (affinity =   73) 
+> > Node    0, rank   74, thread   0, (affinity =   74) 
+> > Node    0, rank   75, thread   0, (affinity =   75) 
+> > Node    0, rank   76, thread   0, (affinity =   76) 
+> > Node    0, rank   77, thread   0, (affinity =   77) 
+> > Node    0, rank   78, thread   0, (affinity =   78) 
+> > Node    0, rank   79, thread   0, (affinity =   79) 
+> > Node    0, rank   80, thread   0, (affinity =   80) 
+> > Node    0, rank   81, thread   0, (affinity =   81) 
+> > Node    0, rank   82, thread   0, (affinity =   82) 
+> > Node    0, rank   83, thread   0, (affinity =   83) 
+> > Node    0, rank   84, thread   0, (affinity =   84) 
+> > Node    0, rank   85, thread   0, (affinity =   85) 
+> > Node    0, rank   86, thread   0, (affinity =   86) 
+> > Node    0, rank   87, thread   0, (affinity =   87) 
+> > Node    0, rank   88, thread   0, (affinity =   88) 
+> > Node    0, rank   89, thread   0, (affinity =   89) 
+> > Node    0, rank   90, thread   0, (affinity =   90) 
+> > Node    0, rank   91, thread   0, (affinity =   91) 
+> > Node    0, rank   92, thread   0, (affinity =   92) 
+> > Node    0, rank   93, thread   0, (affinity =   93) 
+> > Node    0, rank   94, thread   0, (affinity =   94) 
+> > Node    0, rank   95, thread   0, (affinity =   95) 
+> > Node    0, rank   96, thread   0, (affinity =   96) 
+> > Node    0, rank   97, thread   0, (affinity =   97) 
+> > Node    0, rank   98, thread   0, (affinity =   98) 
+> > Node    0, rank   99, thread   0, (affinity =   99) 
+> > Node    0, rank  100, thread   0, (affinity =  100) 
+> > Node    0, rank  101, thread   0, (affinity =  101) 
+> > Node    0, rank  102, thread   0, (affinity =  102) 
+> > Node    0, rank  103, thread   0, (affinity =  103) 
+> > Node    0, rank  104, thread   0, (affinity =  104) 
+> > Node    0, rank  105, thread   0, (affinity =  105) 
+> > Node    0, rank  106, thread   0, (affinity =  106) 
+> > Node    0, rank  107, thread   0, (affinity =  107) 
+> > Node    0, rank  108, thread   0, (affinity =  108) 
+> > Node    0, rank  109, thread   0, (affinity =  109) 
+> > Node    0, rank  110, thread   0, (affinity =  110) 
+> > Node    0, rank  111, thread   0, (affinity =  111) 
+> > Node    0, rank  112, thread   0, (affinity =  112) 
+> > Node    0, rank  113, thread   0, (affinity =  113) 
+> > Node    0, rank  114, thread   0, (affinity =  114) 
+> > Node    0, rank  115, thread   0, (affinity =  115) 
+> > Node    0, rank  116, thread   0, (affinity =  116) 
+> > Node    0, rank  117, thread   0, (affinity =  117) 
+> > Node    0, rank  118, thread   0, (affinity =  118) 
+> > Node    0, rank  119, thread   0, (affinity =  119) 
+> > Node    0, rank  120, thread   0, (affinity =  120) 
+> > Node    0, rank  121, thread   0, (affinity =  121) 
+> > Node    0, rank  122, thread   0, (affinity =  122) 
+> > Node    0, rank  123, thread   0, (affinity =  123) 
+> > Node    0, rank  124, thread   0, (affinity =  124) 
+> > Node    0, rank  125, thread   0, (affinity =  125) 
+> > Node    0, rank  126, thread   0, (affinity =  126) 
+> > Node    0, rank  127, thread   0, (affinity =  127) 
+> > Node    1, rank  128, thread   0, (affinity =    0) 
+> > Node    1, rank  129, thread   0, (affinity =    1) 
+> > Node    1, rank  130, thread   0, (affinity =    2) 
+> > Node    1, rank  131, thread   0, (affinity =    3) 
+> > Node    1, rank  132, thread   0, (affinity =    4) 
+> > Node    1, rank  133, thread   0, (affinity =    5) 
+> > Node    1, rank  134, thread   0, (affinity =    6) 
+> > Node    1, rank  135, thread   0, (affinity =    7) 
+> > Node    1, rank  136, thread   0, (affinity =    8) 
+> > Node    1, rank  137, thread   0, (affinity =    9) 
+> > Node    1, rank  138, thread   0, (affinity =   10) 
+> > Node    1, rank  139, thread   0, (affinity =   11) 
+> > Node    1, rank  140, thread   0, (affinity =   12) 
+> > Node    1, rank  141, thread   0, (affinity =   13) 
+> > Node    1, rank  142, thread   0, (affinity =   14) 
+> > Node    1, rank  143, thread   0, (affinity =   15) 
+> > Node    1, rank  144, thread   0, (affinity =   16) 
+> > Node    1, rank  145, thread   0, (affinity =   17) 
+> > Node    1, rank  146, thread   0, (affinity =   18) 
+> > Node    1, rank  147, thread   0, (affinity =   19) 
+> > Node    1, rank  148, thread   0, (affinity =   20) 
+> > Node    1, rank  149, thread   0, (affinity =   21) 
+> > Node    1, rank  150, thread   0, (affinity =   22) 
+> > Node    1, rank  151, thread   0, (affinity =   23) 
+> > Node    1, rank  152, thread   0, (affinity =   24) 
+> > Node    1, rank  153, thread   0, (affinity =   25) 
+> > Node    1, rank  154, thread   0, (affinity =   26) 
+> > Node    1, rank  155, thread   0, (affinity =   27) 
+> > Node    1, rank  156, thread   0, (affinity =   28) 
+> > Node    1, rank  157, thread   0, (affinity =   29) 
+> > Node    1, rank  158, thread   0, (affinity =   30) 
+> > Node    1, rank  159, thread   0, (affinity =   31) 
+> > Node    1, rank  160, thread   0, (affinity =   32) 
+> > Node    1, rank  161, thread   0, (affinity =   33) 
+> > Node    1, rank  162, thread   0, (affinity =   34) 
+> > Node    1, rank  163, thread   0, (affinity =   35) 
+> > Node    1, rank  164, thread   0, (affinity =   36) 
+> > Node    1, rank  165, thread   0, (affinity =   37) 
+> > Node    1, rank  166, thread   0, (affinity =   38) 
+> > Node    1, rank  167, thread   0, (affinity =   39) 
+> > Node    1, rank  168, thread   0, (affinity =   40) 
+> > Node    1, rank  169, thread   0, (affinity =   41) 
+> > Node    1, rank  170, thread   0, (affinity =   42) 
+> > Node    1, rank  171, thread   0, (affinity =   43) 
+> > Node    1, rank  172, thread   0, (affinity =   44) 
+> > Node    1, rank  173, thread   0, (affinity =   45) 
+> > Node    1, rank  174, thread   0, (affinity =   46) 
+> > Node    1, rank  175, thread   0, (affinity =   47) 
+> > Node    1, rank  176, thread   0, (affinity =   48) 
+> > Node    1, rank  177, thread   0, (affinity =   49) 
+> > Node    1, rank  178, thread   0, (affinity =   50) 
+> > Node    1, rank  179, thread   0, (affinity =   51) 
+> > Node    1, rank  180, thread   0, (affinity =   52) 
+> > Node    1, rank  181, thread   0, (affinity =   53) 
+> > Node    1, rank  182, thread   0, (affinity =   54) 
+> > Node    1, rank  183, thread   0, (affinity =   55) 
+> > Node    1, rank  184, thread   0, (affinity =   56) 
+> > Node    1, rank  185, thread   0, (affinity =   57) 
+> > Node    1, rank  186, thread   0, (affinity =   58) 
+> > Node    1, rank  187, thread   0, (affinity =   59) 
+> > Node    1, rank  188, thread   0, (affinity =   60) 
+> > Node    1, rank  189, thread   0, (affinity =   61) 
+> > Node    1, rank  190, thread   0, (affinity =   62) 
+> > Node    1, rank  191, thread   0, (affinity =   63) 
+> > Node    1, rank  192, thread   0, (affinity =   64) 
+> > Node    1, rank  193, thread   0, (affinity =   65) 
+> > Node    1, rank  194, thread   0, (affinity =   66) 
+> > Node    1, rank  195, thread   0, (affinity =   67) 
+> > Node    1, rank  196, thread   0, (affinity =   68) 
+> > Node    1, rank  197, thread   0, (affinity =   69) 
+> > Node    1, rank  198, thread   0, (affinity =   70) 
+> > Node    1, rank  199, thread   0, (affinity =   71) 
+> > Node    1, rank  200, thread   0, (affinity =   72) 
+> > Node    1, rank  201, thread   0, (affinity =   73) 
+> > Node    1, rank  202, thread   0, (affinity =   74) 
+> > Node    1, rank  203, thread   0, (affinity =   75) 
+> > Node    1, rank  204, thread   0, (affinity =   76) 
+> > Node    1, rank  205, thread   0, (affinity =   77) 
+> > Node    1, rank  206, thread   0, (affinity =   78) 
+> > Node    1, rank  207, thread   0, (affinity =   79) 
+> > Node    1, rank  208, thread   0, (affinity =   80) 
+> > Node    1, rank  209, thread   0, (affinity =   81) 
+> > Node    1, rank  210, thread   0, (affinity =   82) 
+> > Node    1, rank  211, thread   0, (affinity =   83) 
+> > Node    1, rank  212, thread   0, (affinity =   84) 
+> > Node    1, rank  213, thread   0, (affinity =   85) 
+> > Node    1, rank  214, thread   0, (affinity =   86) 
+> > Node    1, rank  215, thread   0, (affinity =   87) 
+> > Node    1, rank  216, thread   0, (affinity =   88) 
+> > Node    1, rank  217, thread   0, (affinity =   89) 
+> > Node    1, rank  218, thread   0, (affinity =   90) 
+> > Node    1, rank  219, thread   0, (affinity =   91) 
+> > Node    1, rank  220, thread   0, (affinity =   92) 
+> > Node    1, rank  221, thread   0, (affinity =   93) 
+> > Node    1, rank  222, thread   0, (affinity =   94) 
+> > Node    1, rank  223, thread   0, (affinity =   95) 
+> > Node    1, rank  224, thread   0, (affinity =   96) 
+> > Node    1, rank  225, thread   0, (affinity =   97) 
+> > Node    1, rank  226, thread   0, (affinity =   98) 
+> > Node    1, rank  227, thread   0, (affinity =   99) 
+> > Node    1, rank  228, thread   0, (affinity =  100) 
+> > Node    1, rank  229, thread   0, (affinity =  101) 
+> > Node    1, rank  230, thread   0, (affinity =  102) 
+> > Node    1, rank  231, thread   0, (affinity =  103) 
+> > Node    1, rank  232, thread   0, (affinity =  104) 
+> > Node    1, rank  233, thread   0, (affinity =  105) 
+> > Node    1, rank  234, thread   0, (affinity =  106) 
+> > Node    1, rank  235, thread   0, (affinity =  107) 
+> > Node    1, rank  236, thread   0, (affinity =  108) 
+> > Node    1, rank  237, thread   0, (affinity =  109) 
+> > Node    1, rank  238, thread   0, (affinity =  110) 
+> > Node    1, rank  239, thread   0, (affinity =  111) 
+> > Node    1, rank  240, thread   0, (affinity =  112) 
+> > Node    1, rank  241, thread   0, (affinity =  113) 
+> > Node    1, rank  242, thread   0, (affinity =  114) 
+> > Node    1, rank  243, thread   0, (affinity =  115) 
+> > Node    1, rank  244, thread   0, (affinity =  116) 
+> > Node    1, rank  245, thread   0, (affinity =  117) 
+> > Node    1, rank  246, thread   0, (affinity =  118) 
+> > Node    1, rank  247, thread   0, (affinity =  119) 
+> > Node    1, rank  248, thread   0, (affinity =  120) 
+> > Node    1, rank  249, thread   0, (affinity =  121) 
+> > Node    1, rank  250, thread   0, (affinity =  122) 
+> > Node    1, rank  251, thread   0, (affinity =  123) 
+> > Node    1, rank  252, thread   0, (affinity =  124) 
+> > Node    1, rank  253, thread   0, (affinity =  125) 
+> > Node    1, rank  254, thread   0, (affinity =  126) 
+> > Node    1, rank  255, thread   0, (affinity =  127)
+> > ```
+> {: .solution}
+{: .challenge}
+
+
+### Underpopulation of nodes
+
+You may often want to *underpopulate* nodes on ARCHER2 to access more memory or more memory 
+bandwidth per process or for other reasons. Underpopulation in this way is achieved by 
+altering the Slurm options, typically by setting the `--ntasks-per-node` option. You 
+usually also need to set the `--cpus-per-task` option to ensure that the processes are
+evenly distributed across NUMA regions on the node.
+
+For example, to half-populate a node with processes (usually MPI processes) to give 64
+processes per node, you would set the following options:
+
+ - `--ntasks-per-node=64` - Sets 64 processes per node
+ - `--cpus-per-task=2` - Sets a stride of 2 cores between processes to ensure that they
+   are evenly distributed across the node
+
+If you did this, then each process will have access to double the amount of memory than
+it would if using 128 processes per node.
+
+> ## Tip
+> You will usually want the product of `ntasks-per-node` and `cpus-per-task` to be 
+> equal to 128 (the number of physical cores on a node). In the case above, 
+> 64&times;2 = 128.
+{: .callout}
 
 > ## Underpopulation of nodes
-> You may often want to *underpopulate* nodes on ARCHER2 to access more memory or more memory 
-> bandwidth per task. Can you state the `sbatch` options you would use to run `xthi` on 4 
-> nodes with 64 tasks per node?
-> 
-> Once you have your answer run them in job script and check that the binding of tasks to 
+> Can you state the `sbatch` options you would use to run `xthi` on 4 
+> nodes with 32 processes per node?
+>
+> Once you have your answer run them in job script and check that the binding of processes to 
 > nodes and cores output by `xthi` is what you expect.
 > 
 > > ## Solution
-> > The options you need are: `--nodes=4 --ntasks-per-node=64`.
+> > The options you need are: `--nodes=4 --ntasks-per-node=32 --cpus-per-task=4`. The output
+> > from running this should look somethign like:
+> > ```
+> > Node summary for    4 nodes:
+> > Node    0, hostname nid001338, mpi  32, omp   1, executable xthi
+> > Node    1, hostname nid001339, mpi  32, omp   1, executable xthi
+> > Node    2, hostname nid001340, mpi  32, omp   1, executable xthi
+> > Node    3, hostname nid001341, mpi  32, omp   1, executable xthi
+> > MPI summary: 128 ranks 
+> > Node    0, rank    0, thread   0, (affinity =  0-3) 
+> > Node    0, rank    1, thread   0, (affinity =  4-7) 
+> > Node    0, rank    2, thread   0, (affinity = 8-11) 
+> > Node    0, rank    3, thread   0, (affinity = 12-15) 
+> > Node    0, rank    4, thread   0, (affinity = 16-19) 
+> > Node    0, rank    5, thread   0, (affinity = 20-23) 
+> > Node    0, rank    6, thread   0, (affinity = 24-27) 
+> > Node    0, rank    7, thread   0, (affinity = 28-31) 
+> > Node    0, rank    8, thread   0, (affinity = 32-35) 
+> > Node    0, rank    9, thread   0, (affinity = 36-39) 
+> > Node    0, rank   10, thread   0, (affinity = 40-43) 
+> > Node    0, rank   11, thread   0, (affinity = 44-47) 
+> > Node    0, rank   12, thread   0, (affinity = 48-51) 
+> > Node    0, rank   13, thread   0, (affinity = 52-55) 
+> > Node    0, rank   14, thread   0, (affinity = 56-59) 
+> > Node    0, rank   15, thread   0, (affinity = 60-63) 
+> > Node    0, rank   16, thread   0, (affinity = 64-67) 
+> > Node    0, rank   17, thread   0, (affinity = 68-71) 
+> > Node    0, rank   18, thread   0, (affinity = 72-75) 
+> > Node    0, rank   19, thread   0, (affinity = 76-79) 
+> > Node    0, rank   20, thread   0, (affinity = 80-83) 
+> > Node    0, rank   21, thread   0, (affinity = 84-87) 
+> > Node    0, rank   22, thread   0, (affinity = 88-91) 
+> > Node    0, rank   23, thread   0, (affinity = 92-95) 
+> > Node    0, rank   24, thread   0, (affinity = 96-99) 
+> > Node    0, rank   25, thread   0, (affinity = 100-103) 
+> > Node    0, rank   26, thread   0, (affinity = 104-107) 
+> > Node    0, rank   27, thread   0, (affinity = 108-111) 
+> > Node    0, rank   28, thread   0, (affinity = 112-115) 
+> > Node    0, rank   29, thread   0, (affinity = 116-119) 
+> > Node    0, rank   30, thread   0, (affinity = 120-123) 
+> > Node    0, rank   31, thread   0, (affinity = 124-127) 
+> > Node    1, rank   32, thread   0, (affinity =  0-3) 
+> > Node    1, rank   33, thread   0, (affinity =  4-7) 
+> > Node    1, rank   34, thread   0, (affinity = 8-11) 
+> > Node    1, rank   35, thread   0, (affinity = 12-15) 
+> > Node    1, rank   36, thread   0, (affinity = 16-19) 
+> > Node    1, rank   37, thread   0, (affinity = 20-23) 
+> > Node    1, rank   38, thread   0, (affinity = 24-27) 
+> > Node    1, rank   39, thread   0, (affinity = 28-31) 
+> > Node    1, rank   40, thread   0, (affinity = 32-35) 
+> > Node    1, rank   41, thread   0, (affinity = 36-39) 
+> > Node    1, rank   42, thread   0, (affinity = 40-43) 
+> > Node    1, rank   43, thread   0, (affinity = 44-47) 
+> > Node    1, rank   44, thread   0, (affinity = 48-51) 
+> > Node    1, rank   45, thread   0, (affinity = 52-55) 
+> > Node    1, rank   46, thread   0, (affinity = 56-59) 
+> > Node    1, rank   47, thread   0, (affinity = 60-63) 
+> > Node    1, rank   48, thread   0, (affinity = 64-67) 
+> > Node    1, rank   49, thread   0, (affinity = 68-71) 
+> > Node    1, rank   50, thread   0, (affinity = 72-75) 
+> > Node    1, rank   51, thread   0, (affinity = 76-79) 
+> > Node    1, rank   52, thread   0, (affinity = 80-83) 
+> > Node    1, rank   53, thread   0, (affinity = 84-87) 
+> > Node    1, rank   54, thread   0, (affinity = 88-91) 
+> > Node    1, rank   55, thread   0, (affinity = 92-95) 
+> > Node    1, rank   56, thread   0, (affinity = 96-99) 
+> > Node    1, rank   57, thread   0, (affinity = 100-103) 
+> > Node    1, rank   58, thread   0, (affinity = 104-107) 
+> > Node    1, rank   59, thread   0, (affinity = 108-111) 
+> > Node    1, rank   60, thread   0, (affinity = 112-115) 
+> > Node    1, rank   61, thread   0, (affinity = 116-119) 
+> > Node    1, rank   62, thread   0, (affinity = 120-123) 
+> > Node    1, rank   63, thread   0, (affinity = 124-127) 
+> > Node    2, rank   64, thread   0, (affinity =  0-3) 
+> > Node    2, rank   65, thread   0, (affinity =  4-7) 
+> > Node    2, rank   66, thread   0, (affinity = 8-11) 
+> > Node    2, rank   67, thread   0, (affinity = 12-15) 
+> > Node    2, rank   68, thread   0, (affinity = 16-19) 
+> > Node    2, rank   69, thread   0, (affinity = 20-23) 
+> > Node    2, rank   70, thread   0, (affinity = 24-27) 
+> > Node    2, rank   71, thread   0, (affinity = 28-31) 
+> > Node    2, rank   72, thread   0, (affinity = 32-35) 
+> > Node    2, rank   73, thread   0, (affinity = 36-39) 
+> > Node    2, rank   74, thread   0, (affinity = 40-43) 
+> > Node    2, rank   75, thread   0, (affinity = 44-47) 
+> > Node    2, rank   76, thread   0, (affinity = 48-51) 
+> > Node    2, rank   77, thread   0, (affinity = 52-55) 
+> > Node    2, rank   78, thread   0, (affinity = 56-59) 
+> > Node    2, rank   79, thread   0, (affinity = 60-63) 
+> > Node    2, rank   80, thread   0, (affinity = 64-67) 
+> > Node    2, rank   81, thread   0, (affinity = 68-71) 
+> > Node    2, rank   82, thread   0, (affinity = 72-75) 
+> > Node    2, rank   83, thread   0, (affinity = 76-79) 
+> > Node    2, rank   84, thread   0, (affinity = 80-83) 
+> > Node    2, rank   85, thread   0, (affinity = 84-87) 
+> > Node    2, rank   86, thread   0, (affinity = 88-91) 
+> > Node    2, rank   87, thread   0, (affinity = 92-95) 
+> > Node    2, rank   88, thread   0, (affinity = 96-99) 
+> > Node    2, rank   89, thread   0, (affinity = 100-103) 
+> > Node    2, rank   90, thread   0, (affinity = 104-107) 
+> > Node    2, rank   91, thread   0, (affinity = 108-111) 
+> > Node    2, rank   92, thread   0, (affinity = 112-115) 
+> > Node    2, rank   93, thread   0, (affinity = 116-119) 
+> > Node    2, rank   94, thread   0, (affinity = 120-123) 
+> > Node    2, rank   95, thread   0, (affinity = 124-127) 
+> > Node    3, rank   96, thread   0, (affinity =  0-3) 
+> > Node    3, rank   97, thread   0, (affinity =  4-7) 
+> > Node    3, rank   98, thread   0, (affinity = 8-11) 
+> > Node    3, rank   99, thread   0, (affinity = 12-15) 
+> > Node    3, rank  100, thread   0, (affinity = 16-19) 
+> > Node    3, rank  101, thread   0, (affinity = 20-23) 
+> > Node    3, rank  102, thread   0, (affinity = 24-27) 
+> > Node    3, rank  103, thread   0, (affinity = 28-31) 
+> > Node    3, rank  104, thread   0, (affinity = 32-35) 
+> > Node    3, rank  105, thread   0, (affinity = 36-39) 
+> > Node    3, rank  106, thread   0, (affinity = 40-43) 
+> > Node    3, rank  107, thread   0, (affinity = 44-47) 
+> > Node    3, rank  108, thread   0, (affinity = 48-51) 
+> > Node    3, rank  109, thread   0, (affinity = 52-55) 
+> > Node    3, rank  110, thread   0, (affinity = 56-59) 
+> > Node    3, rank  111, thread   0, (affinity = 60-63) 
+> > Node    3, rank  112, thread   0, (affinity = 64-67) 
+> > Node    3, rank  113, thread   0, (affinity = 68-71) 
+> > Node    3, rank  114, thread   0, (affinity = 72-75) 
+> > Node    3, rank  115, thread   0, (affinity = 76-79) 
+> > Node    3, rank  116, thread   0, (affinity = 80-83) 
+> > Node    3, rank  117, thread   0, (affinity = 84-87) 
+> > Node    3, rank  118, thread   0, (affinity = 88-91) 
+> > Node    3, rank  119, thread   0, (affinity = 92-95) 
+> > Node    3, rank  120, thread   0, (affinity = 96-99) 
+> > Node    3, rank  121, thread   0, (affinity = 100-103) 
+> > Node    3, rank  122, thread   0, (affinity = 104-107) 
+> > Node    3, rank  123, thread   0, (affinity = 108-111) 
+> > Node    3, rank  124, thread   0, (affinity = 112-115) 
+> > Node    3, rank  125, thread   0, (affinity = 116-119) 
+> > Node    3, rank  126, thread   0, (affinity = 120-123) 
+> > Node    3, rank  127, thread   0, (affinity = 124-127) 
+> > ```
 > {: .solution}
 {: .challenge}
 
 ### Hybrid MPI and OpenMP jobs
 
-When running hybrid MPI (with the individual tasks also known as ranks or processes) and OpenMP
-(with multiple threads) jobs you need to leave free cores between the parallel tasks launched
-using `srun` for the multiple OpenMP threads that will be associated with each MPI task.
+When running hybrid MPI (with multiple processes) and OpenMP
+(with multiple threads) jobs you need to leave free cores between the parallel processes launched
+using `srun` for the multiple OpenMP threads that will be associated with each MPI process.
 
-As we saw above, you can use the options to `sbatch` to control how many parallel tasks are
-placed on each compute node. You use the `--cpus-per-task` option to set the stride 
-between parallel tasks to the right value to accommodate the OpenMP threads - the value
+As we saw above, you can use the options to `sbatch` to control how many parallel processes are
+placed on each compute node and the `--cpus-per-task` option to set the stride 
+between parallel processes. The `--cpus-per-task` option is also used to accommodate the OpenMP
+threads that are launched for each MPI process - the value
 for `--cpus-per-task` should usually be the same as that for `OMP_NUM_THREADS`. To ensure
 you get the correct thread pinning, you also need to specify an additional OpenMP environment
 variable. Specifically:
@@ -327,9 +761,9 @@ variable. Specifically:
    - Set the `OMP_PLACES` environment variable to `cores` with `export OMP_PLACES=cores` in 
      your job submission script
 
-As an example, consider the job script below that runs across 2 nodes with 8 MPI tasks
-per node and 16 OpenMP threads per MPI task (so all 256 cores across both nodes are used,
-128 cores per node).
+As an example, consider the job script below that runs across 2 nodes with 8 MPI processes
+per node and 16 OpenMP threads per MPI process (so all 128 physical cores on both nodes are used,
+256 physical cores in total).
 
 ```
 #!/bin/bash
@@ -355,15 +789,15 @@ srun --hint=nomultithread --distribution=block:block xthi
 {: .language-bash}
 
 Each ARCHER2 compute node is made up of 8 NUMA (*Non Uniform Memory Access*) regions (4 per socket) 
-with 16 cores in each region. Programs where the threads of a task span multiple NUMA regions
+with 16 cores in each region. Programs where the threads of a process span multiple NUMA regions
 are likely to be *much less* efficient so we recommend using thread counts that fit well into the
 ARCHER2 compute node layout. Effectively, this means one of the following options for hybrid jobs
 on nodes where all cores are used:
 
-* 8 MPI tasks per node and 16 OpenMP threads per task: equivalent to 1 MPI task per NUMA region
-* 16 MPI tasks per node and 8 OpenMP threads per task: equivalent to 2 MPI tasks per NUMA region
-* 32 MPI tasks per node and 4 OpenMP threads per task: equivalent to 4 MPI tasks per NUMA region
-* 64 MPI tasks per node and 2 OpenMP threads per task: equivalent to 8 MPI tasks per NUMA region 
+* 8 MPI processes per node and 16 OpenMP threads per process: equivalent to 1 MPI process per NUMA region
+* 16 MPI processes per node and 8 OpenMP threads per process: equivalent to 2 MPI processes per NUMA region
+* 32 MPI processes per node and 4 OpenMP threads per process: equivalent to 4 MPI processes per NUMA region
+* 64 MPI processes per node and 2 OpenMP threads per process: equivalent to 8 MPI processes per NUMA region 
 
 ## Other useful information
 
@@ -378,32 +812,36 @@ command directly. `srun` used in this way takes the same arguments as `sbatch` b
 specified on the command line rather than in a job submission script. As for `srun` within 
 a batch job, you should also provide the name of the executable you want to run.
 
-For example, to execute `xthi` across all cores on two nodes (1 MPI task per core and no
+For example, to execute `xthi` across all cores on two nodes (1 MPI process per core and no
 OpenMP threading) within an interactive job you would issue the following commands:
 
 ```
+auser@ln01:~> export OMP_NUM_THREADS=1
 auser@ln01:~> module load xthi
 auser@ln01:~> srun --partition=standard --qos=short --nodes=2 --ntasks-per-node=128 --cpus-per-task=1 --time=0:10:0 --account=ta001 xthi
 ```
 {: .language-bash}
 ```
-Node    0, hostname nid001030
-Node    1, hostname nid001031
-Node    0, rank    0, thread   0, (affinity = 0,128)
-Node    0, rank    1, thread   0, (affinity = 16,144)
-Node    0, rank    2, thread   0, (affinity = 32,160)
-Node    0, rank    3, thread   0, (affinity = 48,176)
-Node    0, rank    4, thread   0, (affinity = 64,192)
-Node    0, rank    5, thread   0, (affinity = 80,208)
-Node    0, rank    6, thread   0, (affinity = 96,224)
-Node    0, rank    7, thread   0, (affinity = 112,240)
-Node    0, rank    8, thread   0, (affinity = 1,129)
-Node    0, rank    9, thread   0, (affinity = 17,145)
-Node    0, rank   10, thread   0, (affinity = 33,161)
-Node    0, rank   11, thread   0, (affinity = 49,177)
-Node    0, rank   12, thread   0, (affinity = 65,193)
-Node    0, rank   13, thread   0, (affinity = 81,209)
-Node    0, rank   14, thread   0, (affinity = 97,225)
+srun: job 851983 queued and waiting for resources
+srun: job 851983 has been allocated resources
+Node summary for    2 nodes:
+Node    0, hostname nid001340, mpi 128, omp   1, executable xthi
+Node    1, hostname nid001341, mpi 128, omp   1, executable xthi
+MPI summary: 256 ranks 
+Node    0, rank    0, thread   0, (affinity = 0,128) 
+Node    0, rank    1, thread   0, (affinity = 16,144) 
+Node    0, rank    2, thread   0, (affinity = 32,160) 
+Node    0, rank    3, thread   0, (affinity = 48,176) 
+Node    0, rank    4, thread   0, (affinity = 64,192) 
+Node    0, rank    5, thread   0, (affinity = 80,208) 
+Node    0, rank    6, thread   0, (affinity = 96,224) 
+Node    0, rank    7, thread   0, (affinity = 112,240) 
+Node    0, rank    8, thread   0, (affinity = 1,129) 
+Node    0, rank    9, thread   0, (affinity = 17,145) 
+Node    0, rank   10, thread   0, (affinity = 33,161) 
+Node    0, rank   11, thread   0, (affinity = 49,177) 
+Node    0, rank   12, thread   0, (affinity = 65,193) 
+Node    0, rank   13, thread   0, (affinity = 81,209) 
 ...long output trimmed...
 ```
 {: .output}
