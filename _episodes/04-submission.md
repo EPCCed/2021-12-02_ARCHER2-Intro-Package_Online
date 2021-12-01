@@ -130,6 +130,9 @@ nid001015      1  standard   allocated 256    2:64:2 227328        0      1 COMP
 > > (often referred to as symmetric multithreading, SMT). Most jobs will only make use of one of these
 > > threads as using the other thread can reduce performance. This manifests itself as 256 *logical* cores
 > > per node (with two logical cores per physical core).
+> > 
+> > You may also notice that the amount of memory available does not match the full capacity of the node. This
+> > is because some memory is used up with the OS and system processes.
 > {: .solution}
 {: .challenge}
 
