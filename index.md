@@ -13,7 +13,7 @@ enddate: 2021-12-02 16:00
 instructor: ["Andy Turner"]
 helper: []
 email: ["a.turner@epcc.ed.ac.uk"]
-collaborative_notes: 
+collaborative_notes: https://pad.archer2.ac.uk/p/211202-package-users
 eventbrite: 
 root: .
 ---
