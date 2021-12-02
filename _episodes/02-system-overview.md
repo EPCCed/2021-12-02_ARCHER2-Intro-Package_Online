@@ -247,7 +247,7 @@ As well as the hardware and system software, HPE supply the HPE Cray Programming
 contains:
 
 | Compilers | GCC, HPE Cray Compilers (CCE), AMD Compilers (AOCC) |
-| Parallel libraries | MPE Cray MPI (MPICH2-based), OpenSHMEM, Global Arrays |
+| Parallel libraries | HPE Cray MPI (MPICH2-based), OpenSHMEM, Global Arrays |
 | Scientific and numerical libraries | BLAS/LAPACK/BLACS/ScaLAPACK (HPE Cray LibSci), FFTW3, HDF5, NetCDF |
 | Debugging and profiling tools | gdb4hpc, valgrind4hpc, CrayPAT + others |
 | Optimised Python 3 environment | numpy, scipy, mpi4py, dask |
@@ -268,7 +268,7 @@ tools and other useful software. Some examples of the software installed are:
 | Engineering | Code Saturne, OpenFOAM |
 | Biomolecular modelling | GROMACS, NAMD |
 | Earth system modelling | MITgcm, Met Office UM, NEMO |
-| Scientific libraries | ARPACK, Boost, Eigen, ELPA, GSL, HYPRE, METIS, MUMPS, ParaFEM, ParMETIS, PETSc, Scotch, SLEPC, SUNDIALS, Zoltan |
+| Scientific libraries | ARPACK, Boost, Eigen, ELPA, GSL, HYPRE, METIS, MUMPS, ParaFEM, ParMETIS, PETSc, Scotch, SLEPC, SUNDIALS, Trilinos |
 | Software tools | CDO, CGNS, NCL, NCO, Paraview, PLUMED, PyTorch, Tensorflow, VMD |
 
 > ## Licensed software
